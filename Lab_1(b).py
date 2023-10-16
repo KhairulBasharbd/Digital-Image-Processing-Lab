@@ -1,36 +1,32 @@
-import cv2
-import numpy as np
+import numpy as np 
 import matplotlib.pyplot as plt
+import cv2
 
-from PIL import Image, ImageTk
-import tkinter as tk
 
-# Load a grayscale image of size 512x512 using PIL
-image_path = r"C:\Users\Khairul_Bashar\Desktop\Lab\Digital Image Processing\aaa.jpg"  # Replace with the actual path to your image
-original_image = Image.open(image_path).convert('L')
+img_path = 'Digital Image Processing/Images/aaa.jpg'
 
-# Create a window using tkinter
-window = tk.Tk()
-window.title("Intensity Level Resolution Reduction")
+img = cv2.imread(img_path,0)
 
-# Create a canvas to display images
-canvas = tk.Canvas(window, width=512, height=512)
-canvas.pack()
+all_image = []
+all_image.append(img)
 
-# Perform the intensity level resolution reduction and display images
-reduced_images = [original_image]
-while original_image.mode == 'L':
-    original_image = original_image.point(lambda p: p >> 1)  # Decrease by one bit
-    reduced_images.append(original_image)
+for bits in range(7,0,-1):
+    lebel = 2**bits
+    normalized_image = img.astype(float)/256.0
+    sample_image = np.uint8(np.floor(normalized_image * lebel))
+    all_image.append(sample_image)
 
-for idx, image in enumerate(reduced_images):
-    tk_image = ImageTk.PhotoImage(image=image)
-    canvas.create_image(0, 0, anchor=tk.NW, image=tk_image)
-    canvas.update()
-    canvas.delete("all")  # Clear the canvas
 
-    if idx < len(reduced_images) - 1:
-        window.after(1000)  # Display each image for 1 second (adjust as needed)
+print(len(all_image))
+row, col = 2, 4
+fig, ax = plt.subplots(row, col, figsize=(9, 7))
 
-# Close the window when done
-window.destroy()
+idx = 0
+for i in range(row):
+    for j in range(col):
+        ax[i, j].imshow(all_image[idx], cmap='gray')
+        ax[i, j].set_title(f'{8 - idx} bits')
+        idx += 1
+
+plt.tight_layout()
+plt.show()
