@@ -2,7 +2,7 @@ import numpy as np
 import cv2
 import matplotlib.pyplot as plt
 
-path = 'Digital Image Processing/myph2.jpg'
+path = 'Digital Image Processing/Images/aaa.jpeg'
 img = cv2.imread(path,0)
 img = cv2.resize(img,(512,512))
 
