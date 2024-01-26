@@ -1,27 +1,24 @@
-import cv2
 import numpy as np
+import cv2
 import matplotlib.pyplot as plt
 
+path = 'Digital Image Processing/Images/aaa.jpg'
+img = cv2.imread(path,0)
+img = cv2.resize(img,(512,512))
 
-def make_last_three(image):
+[h,w] = img.shape
 
-    mask = 224
-    new_image = image.astype(np.uint8) & mask
-    return new_image
+plt.figure(figsize=(10,5))
+plt.subplot(2,2,1)
+plt.imshow(img, cmap = 'gray')
 
+last3bit_image = img & 0b11100000
+plt.subplot(2,2,2)
+plt.imshow(last3bit_image, cmap = 'gray')
 
-img_path = 'Digital Image Processing/Images/aaa.jpg'
-gray_image = cv2.imread(img_path,0)
-
-new_image = make_last_three(gray_image)
-
-plt.figure(figsize=(8, 7))
-plt.subplot(121)
-plt.imshow(gray_image, cmap='gray')
-plt.title('Original')
-plt.subplot(122)
-plt.imshow(new_image, cmap='gray')
-plt.title('Image of MSB-3 bits')
+difference_image = img - last3bit_image
+plt.subplot(2,2,(3,4))
+plt.imshow(difference_image, cmap = 'gray')
 
 plt.tight_layout()
 plt.show()

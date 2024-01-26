@@ -1,39 +1,28 @@
-import cv2
 import numpy as np
+import cv2
 import matplotlib.pyplot as plt
 
-def brightness_enhancement(image, enhancement_factor, min_intencity, max_intencity):
-    enhanced_image = np.copy(image)
+path = 'Digital Image Processing/Images/aaa.jpg'
+img = cv2.imread(path,0)
+img = cv2.resize(img,(512,512))
 
-    for y in range(enhanced_image.shape[0]):
-        for x in range(enhanced_image.shape[1]):
-            gray_value = enhanced_image[y, x]
-            if gray_value >= min_intencity and gray_value <= max_intencity:
-                new_gray_value = gray_value + enhancement_factor
-                if new_gray_value > 255:
-                    new_gray_value = 255
-                elif new_gray_value < 0:
-                    new_gray_value = 0
-                enhanced_image[y, x] = new_gray_value
+[h,w] = img.shape
 
-    return enhanced_image
+plt.figure(figsize=(12,6))
+plt.subplot(2,2,1)
+plt.imshow(img, cmap = 'gray')
+
+min_range, max_range = 150,200
 
 
-img_path = 'Digital Image Processing/Images/aaa.jpg'
-gray_image = cv2.imread(img_path,0)
+for i in range(h):
+    for j in range(w):
+        if img[i,j]>min_range and img[i,j] < max_range:
+            img[i,j] +=50
 
-factor, low, high = 50, 150, 205
-enhanced_image = brightness_enhancement(gray_image, factor, low, high)
 
-
-fig, ax = plt.subplots(1,2, figsize=(8, 7))
-
-ax[0].imshow(gray_image, cmap='gray')
-ax[0].set_title('Original')
-ax[1].imshow(enhanced_image, cmap='gray')
-ax[1].set_title(f'Enhanced between[{low}-{high}] by {factor}')
+plt.subplot(2,2,2)
+plt.imshow(img, cmap = 'gray')
 
 plt.tight_layout()
 plt.show()
-
-

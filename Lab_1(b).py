@@ -1,32 +1,32 @@
-import numpy as np 
-import matplotlib.pyplot as plt
+import numpy as np
 import cv2
+import matplotlib.pyplot as plt
 
+path = 'Digital Image Processing/Images/aaa.jpeg'
+img = cv2.imread(path,0)
+img = cv2.resize(img,(512,512))
 
-img_path = 'Digital Image Processing/Images/aaa.jpg'
+[h,w] = img.shape
 
-img = cv2.imread(img_path,0)
+image_list = []
+image_list.append(img.copy())
+for i in range(7):
+    for j in range(h):
+        for k in range(w):
+            img[j][k] = img[j][k] >> 1
 
-all_image = []
-all_image.append(img)
+    image_list.append(img.copy())
 
-for bits in range(7,0,-1):
-    lebel = 2**bits
-    normalized_image = img.astype(float)/256.0
-    sample_image = np.uint8(np.floor(normalized_image * lebel))
-    all_image.append(sample_image)
-
-
-print(len(all_image))
-row, col = 2, 4
-fig, ax = plt.subplots(row, col, figsize=(9, 7))
-
+r,c =2,4
 idx = 0
-for i in range(row):
-    for j in range(col):
-        ax[i, j].imshow(all_image[idx], cmap='gray')
-        ax[i, j].set_title(f'{8 - idx} bits')
-        idx += 1
+plt.figure(figsize= (12,6))
+for i in range(r):
+    for j in range(c):
+        plt.subplot(r,c,idx+1)
+        plt.imshow(image_list[idx],cmap ='gray')
+        plt.title(f'{8-idx} bit')
+        idx +=1
+
 
 plt.tight_layout()
-plt.show()
+plt.show()        

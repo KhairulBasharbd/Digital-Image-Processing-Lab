@@ -32,20 +32,6 @@ def average_filtering(noisy_image,kernel_size):
 
     return filtered_image
 
-## perform median filtering
-def median_filtering(noisy_image, kernel_size):
-    [h,w] = noisy_image.shape
-    filtered_image = noisy_image.copy()
-    padding = kernel_size // 2
-
-    for i in range(padding,h-padding):
-        for j in range(padding, w - padding):
-            window = noisy_image[i - padding : i+padding+1 , j -padding : j + padding+1]
-            filtered_image[i , j] = np.median(window)
-
-    return filtered_image
-
-
 ## Find PSNR
 def find_psnr(img, dist_img):
     mse = np.mean((img - dist_img) ** 2)
@@ -64,32 +50,26 @@ img = cv2.resize(img,(512,512))
 [h,w] = img.shape
 
 
+
 percentage = 30
 noisy_image = add_salt_noise(img, percentage)
 
+kernel_size = 3
+average_filter_image1 = average_filtering(noisy_image, kernel_size)
+
 kernel_size = 5
-average_filter_image = average_filtering(noisy_image, kernel_size)
-median_filter_image = median_filtering(noisy_image, kernel_size)
+average_filter_image2 = average_filtering(noisy_image, kernel_size)
 
-average_psnr = find_psnr(img, average_filter_image)
-median_psnr = find_psnr(img, median_filter_image)
+kernel_size = 7
+average_filter_image3 = average_filtering(noisy_image, kernel_size)
 
-print(average_psnr)
-print(median_psnr)
+average_psnr1 = find_psnr(img, average_filter_image1)
+average_psnr2 = find_psnr(img, average_filter_image2)
+average_psnr3 = find_psnr(img, average_filter_image3)
+
+print(average_psnr1)
+print(average_psnr2)
+print(average_psnr3)
 
 
-plt.figure(figsize=(10,5))
-plt.subplot(2,2,1)
-plt.imshow(img, cmap = 'gray')
 
-plt.subplot(2,2,2)
-plt.imshow(noisy_image, cmap = 'gray')
-
-plt.subplot(2,2,3)
-plt.imshow(average_filter_image, cmap = 'gray')
-
-plt.subplot(2,2,4)
-plt.imshow(median_filter_image, cmap = 'gray')
-
-plt.tight_layout()
-plt.show()
