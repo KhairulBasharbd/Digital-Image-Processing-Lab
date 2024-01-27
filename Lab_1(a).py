@@ -2,22 +2,25 @@ import numpy as np
 import cv2
 import matplotlib.pyplot as plt
 
-path = 'Digital Image Processing/Images/aaaa.jpg'
+path = 'Digital Image Processing/myph2.jpg'
 img = cv2.imread(path,0)
+print(img.shape)
+
 img = cv2.resize(img,(512,512))
-[h,w] = img.shape
+h,w = img.shape
 
 f=2
 image_list = []
 
 for i in range(8):
     temp_img = np.zeros((h//f,w//f), dtype = np.uint8)
-
+    
     if temp_img.shape[0] >0 and temp_img.shape[1] >0 :
         for j in range(0,h,f):
             for k in range(0,w,f):
                 temp_img[j//f][k//f] = img[j][k]
 
+            
         image_list.append(temp_img)
 
     f = f*2

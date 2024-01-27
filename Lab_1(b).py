@@ -6,9 +6,10 @@ path = 'Digital Image Processing/myph2.jpg'
 img = cv2.imread(path,0)
 img = cv2.resize(img,(512,512))
 
-[h,w] = img.shape
+h,w = img.shape
 
 image_list = []
+
 image_list.append(img.copy())
 for i in range(7):
     for j in range(h):

@@ -43,7 +43,7 @@ def find_psnr(img, dist_img):
 
 
 
-path = 'Digital Image Processing/Images/aaa.jpeg'
+path = 'Digital Image Processing/myph2.jpg'
 img = cv2.imread(path,0)
 img = cv2.resize(img,(512,512))
 
@@ -51,7 +51,7 @@ img = cv2.resize(img,(512,512))
 
 
 
-percentage = 30
+percentage = 50
 noisy_image = add_salt_noise(img, percentage)
 
 kernel_size = 3
@@ -63,13 +63,39 @@ average_filter_image2 = average_filtering(noisy_image, kernel_size)
 kernel_size = 7
 average_filter_image3 = average_filtering(noisy_image, kernel_size)
 
-average_psnr1 = find_psnr(img, average_filter_image1)
-average_psnr2 = find_psnr(img, average_filter_image2)
-average_psnr3 = find_psnr(img, average_filter_image3)
+average_psnr1 = np.round(find_psnr(img, average_filter_image1),2)
+average_psnr2 = np.round(find_psnr(img, average_filter_image2),2)
+average_psnr3 = np.round(find_psnr(img, average_filter_image3),2)
 
 print(average_psnr1)
 print(average_psnr2)
 print(average_psnr3)
 
+plt.figure(figsize=(10,5))
+plt.subplot(2,3,1)
+plt.imshow(img, cmap = 'gray')
+plt.title('Original Image')
 
+
+plt.subplot(2,3,2)
+plt.imshow(noisy_image, cmap = 'gray')
+plt.title('Noisy Image')
+
+
+plt.subplot(2,3,3)
+plt.imshow(average_filter_image1, cmap = 'gray')
+plt.title(f'Average filtered Image of \n 3x3 kernel and PSNR {average_psnr1}')
+
+plt.subplot(2,3,4)
+plt.imshow(average_filter_image1, cmap = 'gray')
+plt.title(f'Average filtered Image of \n 5x5 kernel and PSNR {average_psnr2}')
+
+plt.subplot(2,3,5)
+plt.imshow(average_filter_image2, cmap = 'gray')
+plt.title(f'Average filtered Image of \n 7x7 kernel and PSNR {average_psnr3}')
+
+
+
+plt.tight_layout()
+plt.show()
 

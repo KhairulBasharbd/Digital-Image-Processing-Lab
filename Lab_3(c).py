@@ -64,23 +64,16 @@ def add_psnr(img, dist_mage):
     mse = np.mean((img - dist_mage) ** 2)
     l=256
     psnr = 20 * np.log10((l-1) / np.sqrt(mse) )  
-    return psnr
+    return np.round(psnr,3)
 
 
-
-
-
-
-
-
-
-path = 'Digital Image Processing/Images/aaa.jpg'
+path = 'Digital Image Processing/myph2.jpg'
 img = cv2.imread(path,0)
 img = cv2.resize(img,(512,512))
 
 [h,w] = img.shape
 
-percentage = 30
+percentage = 10
 noisy_image = add_salt_noise(img, percentage)
 
 kernel_size = 3
@@ -97,9 +90,13 @@ geometric_psnr = add_psnr(img, geometric_filtered_Image)
 plt.figure(figsize=(10,5))
 plt.subplot(2,2,1)
 plt.imshow(img, cmap = 'gray')
+plt.title('Original Image')
+
 
 plt.subplot(2,2,2)
 plt.imshow(noisy_image, cmap = 'gray')
+plt.title('Noisy Image')
+
 
 plt.subplot(2,2,3)
 plt.title(f"harmonic PSNR {harmonic_psnr}")

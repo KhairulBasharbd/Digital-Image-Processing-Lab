@@ -1,7 +1,7 @@
 import numpy as np
 import cv2
 import matplotlib.pyplot as plt
-import random
+#import random
 
 ## add_salt_paper_noise
 def add_salt_noise(img, percentage):
@@ -12,9 +12,9 @@ def add_salt_noise(img, percentage):
     noisy_pixel = int(percentage * total_pixels)
     
     for i in range(noisy_pixel):
-        rand_row = random.randint(0,h-1)
-        rand_col = random.randint(0,w-1)
-        noisy_image[rand_row,rand_col] = random.choice([0,255])
+        rand_row = np.random.randint(0,h-1)
+        rand_col = np.random.randint(0,w-1)
+        noisy_image[rand_row,rand_col] = np.random.choice([0,255])
     return noisy_image
 
 ## perform average filtering
@@ -57,14 +57,14 @@ def find_psnr(img, dist_img):
 
 
 
-path = 'Digital Image Processing/Images/aaa.jpeg'
+path = 'Digital Image Processing/myph2.jpg'
 img = cv2.imread(path,0)
 img = cv2.resize(img,(512,512))
 
 [h,w] = img.shape
 
-
-percentage = 30
+## percentage of noise
+percentage = 50
 noisy_image = add_salt_noise(img, percentage)
 
 kernel_size = 5
@@ -74,22 +74,29 @@ median_filter_image = median_filtering(noisy_image, kernel_size)
 average_psnr = find_psnr(img, average_filter_image)
 median_psnr = find_psnr(img, median_filter_image)
 
-print(average_psnr)
-print(median_psnr)
+print(f'PSNR of Average filter : {average_psnr} ')
+print(f'PSNR of Median filter : {median_psnr} ')
 
 
 plt.figure(figsize=(10,5))
 plt.subplot(2,2,1)
 plt.imshow(img, cmap = 'gray')
+plt.title('Original Image')
+
 
 plt.subplot(2,2,2)
 plt.imshow(noisy_image, cmap = 'gray')
+plt.title('Noisy Image')
+
 
 plt.subplot(2,2,3)
 plt.imshow(average_filter_image, cmap = 'gray')
+plt.title('Average filtered Image')
+
 
 plt.subplot(2,2,4)
 plt.imshow(median_filter_image, cmap = 'gray')
+plt.title('Median filtered Image')
 
 plt.tight_layout()
 plt.show()
