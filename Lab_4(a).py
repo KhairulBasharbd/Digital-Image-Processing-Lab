@@ -12,7 +12,8 @@ def add_gaussian_noise(img, mean=0, stddev=100):
 ## Butterworth low pass filter
 def butterworth_low_pass_filter(image, order, cut_off_frequency):
     height, width = image.shape
-    H = np.zeros(image.shape, dtype=np.float32)
+    #H = np.zeros(image.shape, dtype=np.float32)
+    H = np.zeros_like(image,dtype=np.float32)
 
     # frequncy_domain_image = np.fft.fft2(image)
     # frequncy_domain_image = np.fft.fftshift(frequncy_domain_image)
@@ -40,7 +41,7 @@ def gaussian_low_pass_filter(image, cut_off_frequency):
     for i in range(height):
         for j in range(width):
             d = np.sqrt((i-height/2)**2 + (j-width/2)**2)
-            H[i, j] = np.exp(-(d**2) / (2*D0)**2)
+            H[i, j] = np.exp(-(d**2) / (2*(D0)**2))
 
     filtered_image = frequency_domain_image * H
     filtered_image = np.abs(np.fft.ifft2(filtered_image))
@@ -60,7 +61,7 @@ noisy_image = add_gaussian_noise(img,mean=0,stddev=40)
 order = 4
 cut_off_freq = 10
 b_filtered_image = butterworth_low_pass_filter(noisy_image, order, cut_off_freq)
-g_filtered_image = gaussian_low_pass_filter(noisy_image, 40)
+g_filtered_image = gaussian_low_pass_filter(noisy_image, cut_off_freq)
 
 
 

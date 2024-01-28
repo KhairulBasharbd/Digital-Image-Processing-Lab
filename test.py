@@ -1,78 +1,55 @@
 import numpy as np
+import cv2
 import matplotlib.pyplot as plt
-import cv2 
 
-def add_gaussian_noise(image, mean = 0, stddev = 75):
-    gaussian_noise = np.random.normal(mean, stddev, image.shape)
-    noisy_image = gaussian_noise + image
-    noisy_image = np.clip(noisy_image, 0, 255)
-    return noisy_image.astype(np.uint8)
+def add_salt_noise(img1, perc):
+    img = img1.copy()
+    h, w = img1.shape
 
+    perc = perc / 100
+    total_n = int(perc * h * w)
 
-def gaussian_high_pass_filter(image, cut_off_frequency):
-    height, width = image.shape
-    H = np.zeros(image.shape)
-    D0 = cut_off_frequency
+    for i in range(total_n):
+        r_row = np.random.randint(0, h-1)
+        r_col = np.random.randint(0, w-1)
+        img[r_row, r_col] = np.random.choice([0, 255])
 
-    frequency_domain_image = np.fft.fftshift(np.fft.fft2(image))
+    return img
 
-    for i in range(height):
-        for j in range(width):
-            D = np.sqrt((i - height / 2)**2 + (j-width/2) ** 2)
-            H[i, j] = 1 - np.exp(-(D**2) / (2*D0)**2)
+def geometric_mean_filtering(img, kernel_size):
+    h, w = img.shape
+    padding = kernel_size // 2
+    filtered_img = np.zeros((h, w), dtype=np.float64)
 
-    filtered_image = frequency_domain_image * H
-    filtered_image = np.abs(np.fft.ifft2(filtered_image))
-    filtered_image = filtered_image / 255
-    return filtered_image
+    for i in range(padding, h-padding):
+        for j in range(padding, w-padding):
+            window = img[i-padding: i+padding+1, j-padding: j+padding+1]
+            window = window + 0.01
+            product = np.prod(window)
+            filtered_img[i, j] = product**(1/(kernel_size**2))
 
+    return np.uint8(filtered_img)
 
-def ideal_high_pass_filter(image, cut_off_frequency):
-    height, width = image.shape
-    H = np.zeros(image.shape)
-    D0 = cut_off_frequency
+path = 'Digital Image Processing/Images/aaa.jpeg'
+img = cv2.imread(path, 0)
+img = cv2.resize(img, (512, 512))
 
-    frequency_domain_image = np.fft.fftshift(np.fft.fft2(image))
+percentage = 10
+noisy_image = add_salt_noise(img, percentage)
 
-    for i in range(height):
-        for j in range(width):
-            D = np.sqrt((i - height / 2)**2 + (j-width/2) ** 2)
-            H[i, j] = D > D0
+kernel_size = 5
+geometric_filtered = geometric_mean_filtering(noisy_image, kernel_size)
 
-    filtered_image = frequency_domain_image * H
-    filtered_image = np.abs(np.fft.ifft2(filtered_image))
-    filtered_image = filtered_image / 255
-    return filtered_image
-
-path = 'Digital Image Processing/myph2.jpg'
-original_image = cv2.imread(path,0)
-original_image = cv2.resize(original_image,(512,512))
-noisy_image = add_gaussian_noise(original_image, 0, 25)
-cut_off_frequency = 30
-noisy_image_filtered_by_gausssian = gaussian_high_pass_filter(noisy_image, cut_off_frequency)
-original_image_filtered_by_gausssian = gaussian_high_pass_filter(original_image, cut_off_frequency)
-noisy_image_filtered_by_ideal = ideal_high_pass_filter(noisy_image, cut_off_frequency)
-original_image_filtered_by_ideal = ideal_high_pass_filter(original_image, cut_off_frequency)
-
-plt.figure(figsize=(12, 8))
-plt.subplot(2, 3, 1)
-plt.imshow(original_image,  cmap='gray')
+plt.subplot(2, 2, 1)
+plt.imshow(img, cmap='gray')
 plt.title('Original Image')
-plt.subplot(2, 3, 2)
-plt.imshow(original_image_filtered_by_gausssian,  cmap='gray')
-plt.title('Original Image Gaussian Filter')
-plt.subplot(2, 3, 3)
-plt.imshow(original_image_filtered_by_ideal,  cmap='gray')
-plt.title('Original Image Ideal Filter')
-plt.subplot(2, 3, 4)
+
+plt.subplot(2, 2, 2)
 plt.imshow(noisy_image, cmap='gray')
 plt.title('Noisy Image')
-plt.subplot(2, 3, 5)
-plt.imshow(noisy_image_filtered_by_gausssian, cmap='gray')
-plt.title('Noisy Image Gaussian Filter')
-plt.subplot(2, 3, 6)
-plt.imshow(noisy_image_filtered_by_ideal, cmap='gray')
-plt.title('Noisy Image Ideal Filter')
 
-plt.tight_layout()
+plt.subplot(2, 2, 3)
+plt.imshow(geometric_filtered, cmap='gray')
+plt.title('Geometric Mean Filtered Image')
+
 plt.show()

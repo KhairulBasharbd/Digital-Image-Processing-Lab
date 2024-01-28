@@ -99,4 +99,6 @@ plt.imshow(median_filter_image, cmap = 'gray')
 plt.title('Median filtered Image')
 
 plt.tight_layout()
+
 plt.show()
+
