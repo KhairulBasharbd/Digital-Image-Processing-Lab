@@ -14,7 +14,7 @@ plt.imshow(img, cmap = 'gray')
 plt.title('Original Image')
 
 
-last3bit_image = img & 0b11000000
+last3bit_image = img & 0b11100000
 plt.subplot(2,2,2)
 plt.imshow(last3bit_image, cmap = 'gray')
 plt.title('last 3 bit Image')

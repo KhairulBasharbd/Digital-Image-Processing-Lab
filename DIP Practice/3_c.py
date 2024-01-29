@@ -33,7 +33,7 @@ def geo_filtering(noisy_image,kernel):
     for i in range(padding, h-padding):
         for j in range(padding,w-padding):
             window = noisy_image[i-padding : i+padding+1, j-padding : j+padding+1]
-            window = window + 0.9
+            window = window + 0.1
 
             product = np.prod(window)
             f_img[i,j] = product ** (1/(kernel **2))
@@ -83,7 +83,7 @@ geo_filter = geo_filtering(noisy_image,kernel)
 
 
 
-plt.figure(figsize=(10,5))
+plt.figure(figsize=(10,7))
 plt.subplot(2,2,1)
 plt.imshow(img, cmap = 'gray')
 plt.title('Original Image')

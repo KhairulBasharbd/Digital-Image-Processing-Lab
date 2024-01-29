@@ -34,11 +34,13 @@ def harmonic_filter(noisy_image,kernel_size):
 
     return filtered_image      
 
+#bb
 
 ##  geometric_filter
 def geometric_filter(image, kernel_size):
     height, width = image.shape
-    filtered_image = np.zeros_like(image)
+    #filtered_image = np.zeros_like(image)
+    filtered_image = image.copy()
 
     # Calculate the kernel radius
     kernel_radius = kernel_size // 2
@@ -55,6 +57,8 @@ def geometric_filter(image, kernel_size):
             if values:
                 product = np.prod(values)
                 filtered_image[i, j] = product ** (1 / len(values))
+            else :
+                filtered_image[i, j] = 0
 
     return filtered_image
 
